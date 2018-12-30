@@ -1,5 +1,17 @@
 <template>
   <div id="app">
+    <h1>Draw classification</h1>
+
+    <select v-model="dataset">
+      <option disabled value="">Select dataset</option>
+      <option v-for="option in options" v-bind:value="option">
+        {{ option.name }}
+      </option>
+    </select>
+    <span>Selected: {{ dataset.name }}</span>
+
+    <h2>Draw here:</h2>
+
     <Chart
       v-bind:points="points"
       v-bind:tiles="tiles"
@@ -10,7 +22,13 @@
 </template>
 
 <script>
+// TODO: v-bind:points=dataset.data AND graph drawing in Vue
+
+// TODO: consider https://mikerodham.github.io/vue-dropdowns/
+
 import Chart from './components/Chart.vue'
+
+
 
 const k = 10;
 const n = 50;
@@ -47,8 +65,13 @@ export default {
   },
   data: function () {
     return {
+      dataset: "",
       points: points,
       tiles: tiles,
+      options: [
+        {name: "Sinish", data: points},
+        {name: "Another", data: [1]},
+      ],
     };
   },
   computed: {
