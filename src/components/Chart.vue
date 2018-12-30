@@ -1,20 +1,19 @@
 <template>
-  <div class="hello">
+  <svg class="chart">
 
-  </div>
+  </svg>
 </template>
 
 <script>
 import * as d3 from "d3";
-
-function range(size, startAt = 0) {
-    return [...Array(size).keys()].map(i => i + startAt);
-}
+// TODO: import only relevant parts of d3
 
 export default {
-  name: 'HelloWorld',
+  name: 'Chart',
   props: {
-    msg: String
+    msg: String,
+    points: Array,
+    tiles: Array,
   },
   mounted() {
 
@@ -26,30 +25,8 @@ export default {
     const height = k * size;
 
     const svg = d3.select(this.$el)
-      .append("svg")
       .attr("width", width + 50)
       .attr("height", width + 50);
-
-    const tiles = range(k * k)
-      .map((i) => {
-        return {
-          x: i % k,
-          y: Math.floor(i / k),
-          v: 0 // Math.random()
-        };
-      });
-
-     const points = range(n)
-      .map((i) => {
-        const x = Math.random();
-        const y = Math.random();
-
-        return {
-          x: k * x,
-          y: k * y,
-          v: y < Math.sin(4 * x)
-        };
-      })
 
     const xScale = d3.scaleLinear()
       .domain([0, k])
@@ -78,10 +55,9 @@ export default {
           .call(d3.axisRight(yScale));
       }
 
-
     svg.append("g")
       .selectAll(".point")
-      .data(points)
+      .data(this.points)
       .enter().append("circle")
         .attr("class", "point")
         .attr("cx", d => xScale(d.x))
@@ -91,10 +67,10 @@ export default {
 
     const tileG = svg.append("g");
 
-    const recolor = function() {
+    const recolor = () => {
       tileG
         .selectAll(".tile")
-        .data(tiles)
+        .data(this.tiles)
         .style("fill", d => color(d.v));
     }
 
@@ -102,7 +78,7 @@ export default {
 
     tileG
       .selectAll(".tile")
-      .data(tiles)
+      .data(this.tiles)
       .enter().append("rect")
         .attr("class", "tile")
         .attr("x", d => xScale(d.x))
