@@ -36,8 +36,9 @@
 </template>
 
 <script>
-import * as d3 from "d3";
-// TODO: import only relevant parts of d3
+import {select} from "d3-selection";
+import {scaleLinear} from "d3-scale";
+const d3 = { select, scaleLinear };
 
 export default {
   name: 'Chart',
