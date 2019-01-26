@@ -3,50 +3,19 @@ function isPointInsideTile(point, tile, tileSize) {
     && tile.y <= point.y && point.y < tile.y + tileSize;
 }
 
-function truePositive(predicted, actual) {
-  return actual && (predicted === actual);
-}
-
-function falsePositive(predicted, actual) {
-  return !actual && (predicted !== actual);
-}
-
-function trueNegative(predicted, actual) {
-  return !actual && (predicted === actual);
-}
-
-function falseNegative(predicted, actual) {
-  return actual && (predicted !== actual);
-}
-
-function computeMetric(points, tiles, tileSize, metric) {
-  return points.reduce(
-    function (counter, point) {
-      let isCorrect = false;
-      tiles.forEach(
-        function(tile) {
-          if (isPointInsideTile(point, tile, tileSize)) {
-            isCorrect = metric(tile.v, point.v);
-          }
-        }
-      );
-      return counter + isCorrect;
-    },
-    0);
-}
-
-export function computeTruePositives(points, tiles, tileSize) {
-  return computeMetric(points, tiles, tileSize, truePositive);
-}
-
-export function computeFalsePositives(points, tiles, tileSize) {
-  return computeMetric(points, tiles, tileSize, falsePositive)
-}
-
-export function computeTrueNegatives(points, tiles, tileSize) {
-  return computeMetric(points, tiles, tileSize, trueNegative)
-}
-
-export function computeFalseNegatives(points, tiles, tileSize) {
-  return computeMetric(points, tiles, tileSize, falseNegative)
+export function computeMetrics(points, tiles, tileSize) {
+  const confusionMatrix = [[0, 0], [0, 0]];
+  points.forEach((point) => {
+    tiles.forEach((tile) => {
+      if (isPointInsideTile(point, tile, tileSize)) {
+        confusionMatrix[tile.v][point.v] += 1;
+      }
+    });
+  });
+  return {
+    truePositives: confusionMatrix[1][1],
+    falsePositives: confusionMatrix[1][0],
+    falseNegatives: confusionMatrix[0][1],
+    trueNegatives: confusionMatrix[0][0],
+  }
 }
