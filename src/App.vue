@@ -17,16 +17,39 @@
     />
     <p>Points: {{dataset.points.length}}</p>
     <p>Tiles up: {{tilesUp}}</p>
-    <p>True Positives: {{truePositives}}</p>
-    <p>False Positives: {{falsePositives}}</p>
-    <p>True Negatives: {{trueNegatives}}</p>
-    <p>False Negatives: {{falseNegatives}}</p>
+    <table>
+      <tbody>
+        <tr>
+          <th style="background:white; border:none;" colspan="2" rowspan="2"></th>
+          <th colspan="3" style="background:none;">Actual class</th>
+        </tr>
+        <tr>
+          <th>Positive</th>
+          <th>Negative</th>
+        </tr>
+        <tr>
+          <th rowspan="3" style="height:6em;">
+            <div style="display: inline-block; -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); transform: rotate(-90deg);;">Predicted<br /> class</div>
+          </th>
+          <th>Positive</th>
+          <td>True Positives: {{truePositives}}</td>
+          <td>False Positives: {{falsePositives}}</td>
+        </tr>
+        <tr>
+          <th>Negative</th>
+          <td>False Negatives: {{falseNegatives}}</td>
+          <td>True Negatives: {{trueNegatives}}</td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
 </template>
 
 <script>
 
 import Chart from './components/Chart.vue'
+import {computeTruePositives, computeFalsePositives, computeTrueNegatives, computeFalseNegatives} from "./metrics";
 
 const k = 10;
 const n = 50;
@@ -70,43 +93,6 @@ const circle = range(n)
     };
   });
 
-function isPointInsideTile(point, tile) {
-  return tile.x <= point.x && point.x < tile.x + tileSize
-    && tile.y <= point.y && point.y < tile.y + tileSize;
-}
-
-function truePositive(point, tile) {
-  return point.v && (tile.v === point.v);
-}
-
-function falsePositive(point, tile) {
-  return !point.v && (tile.v !== point.v);
-}
-
-function trueNegative(point, tile) {
-  return !point.v && (tile.v === point.v);
-}
-
-function falseNegative(point, tile) {
-  return point.v && (tile.v !== point.v);
-}
-
-function computeMetric(points, tiles, metric) {
-  return points.reduce(
-    function (counter, point) {
-      let isCorrect = false;
-      tiles.forEach(
-        function(tile) {
-          if (isPointInsideTile(point, tile)) {
-            isCorrect = metric(point, tile);
-          }
-        }
-      );
-      return counter + isCorrect;
-    },
-    0);
-}
-
 export default {
   name: 'app',
   components: {
@@ -133,16 +119,16 @@ export default {
       return counter;
     },
     truePositives: function() {
-        return computeMetric(this.dataset.points, this.tiles, truePositive);
+        return computeTruePositives(this.dataset.points, this.tiles, tileSize);
     },
     falsePositives: function() {
-        return computeMetric(this.dataset.points, this.tiles, falsePositive);
+        return computeFalsePositives(this.dataset.points, this.tiles, tileSize);
     },
     trueNegatives: function() {
-        return computeMetric(this.dataset.points, this.tiles, trueNegative);
+        return computeTrueNegatives(this.dataset.points, this.tiles, tileSize);
     },
     falseNegatives: function() {
-        return computeMetric(this.dataset.points, this.tiles, falseNegative);
+        return computeFalseNegatives(this.dataset.points, this.tiles, tileSize);
     }
   }
 }
