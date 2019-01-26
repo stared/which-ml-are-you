@@ -53,6 +53,7 @@
 
 import Chart from './components/Chart.vue'
 import {computeTruePositives, computeFalsePositives, computeTrueNegatives, computeFalseNegatives} from "./metrics";
+import {datasets} from '../assets/datasets/all.json'
 
 const k = 10;
 const n = 50;
@@ -103,14 +104,14 @@ export default {
   },
   data: function () {
     return {
-      dataset: {name: "Sinish", points: points},
-      points: points,
+      dataset: {name: "Empty", points: []},
+      points: [],
       tiles: tiles,
-      options: [
-        {name: "Sinish", points: points},
-        {name: "Circle", points: circle},
-        {name: "Empty", points: []},
-      ],
+      options: datasets.map(
+        (dataset) => ({
+          name: dataset.name,
+          points: dataset.data.train
+        })),
     };
   },
   computed: {
