@@ -20,6 +20,8 @@
       :tiles="tiles"
       :width="500"
       :height="500"
+      :colorNegative="selectedColorScheme.negative"
+      :colorPositive="selectedColorScheme.positive"
     />
 
     <div>
@@ -33,6 +35,16 @@
         set all to: raNDoM
       </button>
     </div>
+
+    <select v-model="selectedColorScheme">
+      <option
+        v-for="colorScheme in colorSchemes"
+        :key="colorScheme.name"
+        :value="colorScheme"
+      >
+        {{ colorScheme.name }}
+      </option>
+    </select>
 
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
@@ -126,6 +138,12 @@ export default {
         {name: "Circle", points: circle},
         {name: "Empty", points: []},
       ],
+      colorSchemes: [
+        {name: "RedGreen", negative: 'red', positive: 'green'},
+        {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
+        {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
+      ],
+      selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'}
     };
   },
   computed: {

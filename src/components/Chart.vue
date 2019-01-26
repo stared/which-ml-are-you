@@ -11,7 +11,7 @@
         class="point"
         :cx="xScale(d.x)"
         :cy="yScale(d.y)"
-        :r="2"
+        :r="4"
         :style="{fill: color(d.v)}"
       />
     </g>
@@ -24,7 +24,7 @@
         :y="yScale(d.y)"
         :width="size"
         :height="size"
-        :style="{fill: color(d.v), opacity: 0.3}"
+        :style="{fill: color(d.v), opacity: 0.15}"
         @mousedown="tileMouseDown(d)"
         @mouseover="tileMouseOver(d)"
         @mouseup="tileMouseUp()"
@@ -50,22 +50,32 @@ export default {
     height: Number,
     size: {type: Number, default: 50},
     k: {type: Number, default: 10},
-    axisPadding: {type: Number, default: 0}
+    axisPadding: {type: Number, default: 0},
+    colorNegative: {type: String, default: "red"},
+    colorPositive: {type: String, default: "green"},
   },
   data: function () {
     return {
-      xScale: d3.scaleLinear()
-        .domain([0, this.k])
-        .range([0, this.k * this.size]),
-      yScale: d3.scaleLinear()
-        .domain([0, this.k])
-        .range([0, this.k * this.size]),
-      color: d3.scaleLinear()
-        .domain([0, 0.5, 1.])
-        .range(['red', 'white', 'green']),
       isDown: false,
       brushValue: 1,
     };
+  },
+  computed: {
+    xScale: function() {
+      return d3.scaleLinear()
+        .domain([0, this.k])
+        .range([0, this.k * this.size]);
+    },
+    yScale: function() {
+      return d3.scaleLinear()
+        .domain([0, this.k])
+        .range([0, this.k * this.size]);
+    },
+    color: function() {
+      return d3.scaleLinear()
+        .domain([0, 0.5, 1.])
+        .range([this.colorNegative, 'white', this.colorPositive]);
+    },
   },
   mounted() {
     d3.select(this.$el).select("g.x-axis")
@@ -116,4 +126,11 @@ a {
 .tile {
   cursor: pointer;
 }
+
+.point {
+  stroke: white;
+  stroke-width: 1;
+  stroke-opacity: 0.8;
+}
+
 </style>
