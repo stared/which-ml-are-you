@@ -28,8 +28,6 @@
 
 import Chart from './components/Chart.vue'
 
-
-
 const k = 10;
 const n = 50;
 
@@ -46,7 +44,7 @@ const tiles = range(k * k)
     };
   });
 
- const points = range(n)
+const points = range(n)
   .map(() => {
     const x = Math.random();
     const y = Math.random();
@@ -54,7 +52,7 @@ const tiles = range(k * k)
     return {
       x: k * x,
       y: k * y,
-      v: +(y < Math.sin(4 * x))
+      v: y < Math.sin(4 * x)
     };
   });
 
@@ -68,7 +66,7 @@ const circle = range(n)
       y: k * y,
       v: +(Math.pow(x - 0.5, 2) + Math.pow(y - 0.5, 2) < 0.1)
     };
-  })
+  });
 
 export default {
   name: 'App',
@@ -89,7 +87,7 @@ export default {
   },
   computed: {
     tilesUp: function() {
-      let counter = 0
+      let counter = 0;
       this.tiles.forEach(
         (d) => counter += d.v
       );
