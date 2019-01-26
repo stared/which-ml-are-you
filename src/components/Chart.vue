@@ -38,7 +38,8 @@
 <script>
 import {select} from "d3-selection";
 import {scaleLinear} from "d3-scale";
-const d3 = { select, scaleLinear };
+import {axisBottom, axisRight} from "d3-axis";
+const d3 = { select, scaleLinear, axisBottom, axisRight };
 
 export default {
   name: 'Chart',
