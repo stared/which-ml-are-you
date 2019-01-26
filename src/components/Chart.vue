@@ -28,15 +28,15 @@ export default {
       .attr("width", width + 50)
       .attr("height", width + 50);
 
-    const xScale = d3.scaleLinear()
+    this.xScale = d3.scaleLinear()
       .domain([0, k])
       .range([0, k * size]);
 
-    const yScale = d3.scaleLinear()
+    this.yScale = d3.scaleLinear()
       .domain([0, k])
       .range([0, k * size]);
 
-    const color = d3.scaleLinear()
+    this.color = d3.scaleLinear()
       .domain([0, 0.5, 1.])
       .range(['red', 'white', 'green']);
 
@@ -47,23 +47,25 @@ export default {
         svg.append("g")
           .attr("class", "x axis")
           .attr("transform", `translate(0,${height - 2 * padding})`)
-          .call(d3.axisBottom(xScale));
+          .call(d3.axisBottom(this.xScale));
 
         svg.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(" + (width - 2 * padding) + ",0)")
-          .call(d3.axisRight(yScale));
+          .call(d3.axisRight(this.yScale));
       }
 
-    svg.append("g")
+    this.pointG = svg.append("g");
+
+    this.pointG
       .selectAll(".point")
       .data(this.points)
       .enter().append("circle")
         .attr("class", "point")
-        .attr("cx", d => xScale(d.x))
-        .attr("cy", d => yScale(d.y))
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScale(d.y))
         .attr("r", 2)
-        .style("fill", d => color(d.v));
+        .style("fill", d => this.color(d.v));
 
     const tileG = svg.append("g");
 
@@ -71,7 +73,7 @@ export default {
       tileG
         .selectAll(".tile")
         .data(this.tiles)
-        .style("fill", d => color(d.v));
+        .style("fill", d => this.color(d.v));
     }
 
     let isDown = false;
@@ -81,11 +83,11 @@ export default {
       .data(this.tiles)
       .enter().append("rect")
         .attr("class", "tile")
-        .attr("x", d => xScale(d.x))
-        .attr("y", d => yScale(d.y))
+        .attr("x", d => this.xScale(d.x))
+        .attr("y", d => this.yScale(d.y))
         .attr("width", size)
         .attr("height", size)
-        .style("fill", d => color(d.v))
+        .style("fill", d => this.color(d.v))
         .style("opacity", 0.3)
         .on("mousedown", () => isDown = true)
         .on("mouseover", (d) => {
@@ -95,11 +97,36 @@ export default {
          }
         })
        .on("mouseup", () => isDown = false)
-  }
+  },
+
+  watch: {
+    points: function (newPoints, oldPoints) {
+      const points = this.pointG
+        .selectAll(".point")
+        .data(newPoints);
+
+      points.enter()
+        .append("circle")
+        .attr("class", "point")
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScale(d.y))
+        .attr("r", 2)
+        .style("fill", d => this.color(d.v));
+
+      points
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScale(d.y))
+        .attr("r", 2)
+        .style("fill", d => this.color(d.v));
+
+      points.exit()
+        .remove();
+    }
+  },
 }
+
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h3 {
   margin: 40px 0 0;
@@ -114,5 +141,9 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.tile {
+  cursor: pointer;
 }
 </style>

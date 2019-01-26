@@ -1,7 +1,18 @@
 <template>
   <div id="app">
+    <h1>Draw classification</h1>
+
+    <select v-model="dataset">
+      <option v-for="option in options" v-bind:value="option">
+        {{ option.name }}
+      </option>
+    </select>
+    <span>Selected: {{ dataset.name }}</span>
+
+    <h2>Draw here:</h2>
+
     <Chart
-      v-bind:points="points"
+      v-bind:points="dataset.points"
       v-bind:tiles="tiles"
     />
     <p>Points: {{points.length}}</p>
@@ -10,6 +21,7 @@
 </template>
 
 <script>
+
 import Chart from './components/Chart.vue'
 
 const k = 10;
@@ -29,16 +41,28 @@ const tiles = range(k * k)
   });
 
 const points = range(n)
-.map((i) => {
-  const x = Math.random();
-  const y = Math.random();
+  .map(() => {
+    const x = Math.random();
+    const y = Math.random();
 
-  return {
-    x: k * x,
-    y: k * y,
-    v: y < Math.sin(4 * x)
-  };
-});
+    return {
+      x: k * x,
+      y: k * y,
+      v: y < Math.sin(4 * x)
+    };
+  });
+
+const circle = range(n)
+  .map(() => {
+    const x = Math.random();
+    const y = Math.random();
+
+    return {
+      x: k * x,
+      y: k * y,
+      v: +(Math.pow(x - 0.5, 2) + Math.pow(y - 0.5, 2) < 0.1)
+    };
+  });
 
 export default {
   name: 'app',
@@ -47,8 +71,14 @@ export default {
   },
   data: function () {
     return {
+      dataset: {name: "Sinish", points: points},
       points: points,
       tiles: tiles,
+      options: [
+        {name: "Sinish", points: points},
+        {name: "Circle", points: circle},
+        {name: "Empy", points: []},
+      ],
     };
   },
   computed: {
