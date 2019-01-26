@@ -19,14 +19,40 @@
       :points="dataset.points"
       :tiles="tiles"
     />
-    <p>Points: {{ points.length }}</p>
-    <p>Tiles up: {{ tilesUp }}</p>
+    <p>Points: {{dataset.points.length}}</p>
+    <p>Tiles up: {{tilesUp}}</p>
+    <table>
+      <tbody>
+        <tr>
+          <th style="background:white; border:none;" colspan="2" rowspan="2"></th>
+          <th colspan="3" style="background:none;">Actual class</th>
+        </tr>
+        <tr>
+          <th>Positive</th>
+          <th>Negative</th>
+        </tr>
+        <tr>
+          <th rowspan="3" style="height:6em;">
+            <div style="display: inline-block; -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); transform: rotate(-90deg);;">Predicted<br /> class</div>
+          </th>
+          <th>Positive</th>
+          <td>True Positives: {{truePositives}}</td>
+          <td>False Positives: {{falsePositives}}</td>
+        </tr>
+        <tr>
+          <th>Negative</th>
+          <td>False Negatives: {{falseNegatives}}</td>
+          <td>True Negatives: {{trueNegatives}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script>
 
 import Chart from './components/Chart.vue'
+import {computeTruePositives, computeFalsePositives, computeTrueNegatives, computeFalseNegatives} from "./metrics";
 
 const k = 10;
 const n = 50;
@@ -34,6 +60,8 @@ const n = 50;
 function range(size, startAt = 0) {
     return [...Array(size).keys()].map(i => i + startAt);
 }
+
+const tileSize = 1;
 
 const tiles = range(k * k)
   .map((i) => {
@@ -52,7 +80,7 @@ const points = range(n)
     return {
       x: k * x,
       y: k * y,
-      v: y < Math.sin(4 * x)
+      v: +(y < Math.sin(4 * x))
     };
   });
 
@@ -81,7 +109,7 @@ export default {
       options: [
         {name: "Sinish", points: points},
         {name: "Circle", points: circle},
-        {name: "Empy", points: []},
+        {name: "Empty", points: []},
       ],
     };
   },
@@ -92,6 +120,18 @@ export default {
         (d) => counter += d.v
       );
       return counter;
+    },
+    truePositives: function() {
+        return computeTruePositives(this.dataset.points, this.tiles, tileSize);
+    },
+    falsePositives: function() {
+        return computeFalsePositives(this.dataset.points, this.tiles, tileSize);
+    },
+    trueNegatives: function() {
+        return computeTrueNegatives(this.dataset.points, this.tiles, tileSize);
+    },
+    falseNegatives: function() {
+        return computeFalseNegatives(this.dataset.points, this.tiles, tileSize);
     }
   }
 }
