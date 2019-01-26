@@ -19,8 +19,8 @@
       :points="dataset.points"
       :tiles="tiles"
     />
-    <p>Points: {{dataset.points.length}}</p>
-    <p>Tiles up: {{tilesUp}}</p>
+    <p>Points: {{ dataset.points.length }}</p>
+    <p>Tiles up: {{ tilesUp }}</p>
     <table>
       <tbody>
         <tr>
@@ -36,13 +36,13 @@
             <div style="display: inline-block; -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); transform: rotate(-90deg);;">Predicted<br /> class</div>
           </th>
           <th>Positive</th>
-          <td>True Positives: {{truePositives}}</td>
-          <td>False Positives: {{falsePositives}}</td>
+          <td>True Positives: {{ truePositives }}</td>
+          <td>False Positives: {{ falsePositives }}</td>
         </tr>
         <tr>
           <th>Negative</th>
-          <td>False Negatives: {{falseNegatives}}</td>
-          <td>True Negatives: {{trueNegatives}}</td>
+          <td>False Negatives: {{ falseNegatives }}</td>
+          <td>True Negatives: {{ trueNegatives }}</td>
         </tr>
       </tbody>
     </table>
