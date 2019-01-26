@@ -28,17 +28,17 @@ const tiles = range(k * k)
     };
   });
 
- const points = range(n)
-  .map((i) => {
-    const x = Math.random();
-    const y = Math.random();
+const points = range(n)
+.map((i) => {
+  const x = Math.random();
+  const y = Math.random();
 
-    return {
-      x: k * x,
-      y: k * y,
-      v: y < Math.sin(4 * x)
-    };
-  })
+  return {
+    x: k * x,
+    y: k * y,
+    v: y < Math.sin(4 * x)
+  };
+});
 
 export default {
   name: 'app',
@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     tilesUp: function() {
-      let counter = 0
+      let counter = 0;
       this.tiles.forEach(
         (d) => counter += d.v
       );
