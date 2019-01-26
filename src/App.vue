@@ -36,7 +36,7 @@ const points = range(n)
   return {
     x: k * x,
     y: k * y,
-    v: y < Math.sin(4 * x)
+    v: +(y < Math.sin(4 * x))
   };
 });
 
