@@ -15,7 +15,7 @@
       v-bind:points="dataset.points"
       v-bind:tiles="tiles"
     />
-    <p>Points: {{points.length}}</p>
+    <p>Points: {{dataset.points.length}}</p>
     <p>Tiles up: {{tilesUp}}</p>
     <p>True Positives: {{truePositives}}</p>
     <p>False Positives: {{falsePositives}}</p>
@@ -120,7 +120,7 @@ export default {
       options: [
         {name: "Sinish", points: points},
         {name: "Circle", points: circle},
-        {name: "Empy", points: []},
+        {name: "Empty", points: []},
       ],
     };
   },
@@ -133,16 +133,16 @@ export default {
       return counter;
     },
     truePositives: function() {
-        return computeMetric(this.points, this.tiles, truePositive);
+        return computeMetric(this.dataset.points, this.tiles, truePositive);
     },
     falsePositives: function() {
-        return computeMetric(this.points, this.tiles, falsePositive);
+        return computeMetric(this.dataset.points, this.tiles, falsePositive);
     },
     trueNegatives: function() {
-        return computeMetric(this.points, this.tiles, trueNegative);
+        return computeMetric(this.dataset.points, this.tiles, trueNegative);
     },
     falseNegatives: function() {
-        return computeMetric(this.points, this.tiles, falseNegative);
+        return computeMetric(this.dataset.points, this.tiles, falseNegative);
     }
   }
 }
