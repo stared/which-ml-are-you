@@ -1,7 +1,5 @@
 <template>
-  <svg class="chart">
-
-  </svg>
+  <svg class="chart" />
 </template>
 
 <script>
@@ -15,11 +13,34 @@ export default {
     points: Array,
     tiles: Array,
   },
+  watch: {
+    points: function (newPoints) {
+      const points = this.pointG
+        .selectAll(".point")
+        .data(newPoints);
+
+      points.enter()
+        .append("circle")
+        .attr("class", "point")
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScale(d.y))
+        .attr("r", 2)
+        .style("fill", d => this.color(d.v));
+
+      points
+        .attr("cx", d => this.xScale(d.x))
+        .attr("cy", d => this.yScale(d.y))
+        .attr("r", 2)
+        .style("fill", d => this.color(d.v));
+
+      points.exit()
+        .remove();
+    }
+  },
   mounted() {
 
     const size = 50;
     const k = 10;
-    const n = 50;
 
     const width = k * size;
     const height = k * size;
@@ -99,30 +120,6 @@ export default {
        .on("mouseup", () => isDown = false)
   },
 
-  watch: {
-    points: function (newPoints, oldPoints) {
-      const points = this.pointG
-        .selectAll(".point")
-        .data(newPoints);
-
-      points.enter()
-        .append("circle")
-        .attr("class", "point")
-        .attr("cx", d => this.xScale(d.x))
-        .attr("cy", d => this.yScale(d.y))
-        .attr("r", 2)
-        .style("fill", d => this.color(d.v));
-
-      points
-        .attr("cx", d => this.xScale(d.x))
-        .attr("cy", d => this.yScale(d.y))
-        .attr("r", 2)
-        .style("fill", d => this.color(d.v));
-
-      points.exit()
-        .remove();
-    }
-  },
 }
 
 </script>
