@@ -25,9 +25,9 @@
         :width="size"
         :height="size"
         :style="{fill: color(d.v), opacity: 0.3}"
-        @mousedown="tileMouseDown()"
+        @mousedown="tileMouseDown(d)"
         @mouseover="tileMouseOver(d)"
-        @mouseup="tileMouseUp"
+        @mouseup="tileMouseUp()"
       />
     </g>
     <g class="x-axis" />
@@ -63,6 +63,7 @@ export default {
         .domain([0, 0.5, 1.])
         .range(['red', 'white', 'green']),
       isDown: false,
+      brushValue: 1,
     };
   },
   mounted() {
@@ -76,12 +77,14 @@ export default {
 
   },
   methods: {
-    tileMouseDown: function() {
+    tileMouseDown: function(d) {
       this.isDown = true;
+      this.brushValue = 1 - d.v;
+      d.v = this.brushValue;
     },
     tileMouseOver: function(d) {
       if (this.isDown) {
-        d.v = 1;
+        d.v = this.brushValue;
       }
     },
     tileMouseUp: function() {

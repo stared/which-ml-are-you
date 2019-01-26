@@ -22,6 +22,18 @@
       :height="500"
     />
 
+    <div>
+      <button @click="resetSelection(0)">
+        set all to: NO
+      </button>
+      <button @click="resetSelection(1)">
+        set all to: YES
+      </button>
+      <button @click="resetSelectionRandom()">
+        set all to: raNDoM
+      </button>
+    </div>
+
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
     <table>
@@ -136,6 +148,14 @@ export default {
     falseNegatives: function() {
         return computeFalseNegatives(this.dataset.points, this.tiles, tileSize);
     }
+  },
+  methods: {
+    resetSelection: function(targetValue) {
+      this.tiles.forEach((d) => d.v = targetValue);
+    },
+    resetSelectionRandom: function() {
+      this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
   }
 }
 </script>
