@@ -1,5 +1,38 @@
 <template>
-  <svg class="chart" />
+  <svg
+    class="chart"
+    :width="width + 50"
+    :height="height + 50"
+  >
+    <g>
+      <circle
+        v-for="(d, i) in points"
+        :key="i"
+        class="point"
+        :cx="xScale(d.x)"
+        :cy="yScale(d.y)"
+        :r="2"
+        :style="{fill: color(d.v)}"
+      />
+    </g>
+    <g>
+      <rect
+        v-for="(d, i) in tiles"
+        :key="i"
+        class="tile"
+        :x="xScale(d.x)"
+        :y="yScale(d.y)"
+        :width="size"
+        :height="size"
+        :style="{fill: color(d.v), opacity: 0.3}"
+        @mousedown="tileMouseDown()"
+        @mouseover="tileMouseOver(d)"
+        @mouseup="tileMouseUp"
+      />
+    </g>
+    <g class="x-axis" />
+    <g class="y-axis" />
+  </svg>
 </template>
 
 <script>
@@ -9,115 +42,50 @@ import * as d3 from "d3";
 export default {
   name: 'Chart',
   props: {
-    msg: String,
     points: Array,
     tiles: Array,
+    width: Number,
+    height: Number,
+    size: {type: Number, default: 50},
+    k: {type: Number, default: 10},
+    axisPadding: {type: Number, default: 0}
   },
-  watch: {
-    points: function (newPoints) {
-      const points = this.pointG
-        .selectAll(".point")
-        .data(newPoints);
-
-      points.enter()
-        .append("circle")
-        .attr("class", "point")
-        .attr("cx", d => this.xScale(d.x))
-        .attr("cy", d => this.yScale(d.y))
-        .attr("r", 2)
-        .style("fill", d => this.color(d.v));
-
-      points
-        .attr("cx", d => this.xScale(d.x))
-        .attr("cy", d => this.yScale(d.y))
-        .attr("r", 2)
-        .style("fill", d => this.color(d.v));
-
-      points.exit()
-        .remove();
-    }
+  data: function () {
+    return {
+      xScale: d3.scaleLinear()
+        .domain([0, this.k])
+        .range([0, this.k * this.size]),
+      yScale: d3.scaleLinear()
+        .domain([0, this.k])
+        .range([0, this.k * this.size]),
+      color: d3.scaleLinear()
+        .domain([0, 0.5, 1.])
+        .range(['red', 'white', 'green']),
+      isDown: false,
+    };
   },
   mounted() {
+    d3.select(this.$el).select("g.x-axis")
+      .attr("transform", `translate(0,${this.height - 2 * this.axisPadding})`)
+      .call(d3.axisBottom(this.xScale));
 
-    const size = 50;
-    const k = 10;
+    d3.select(this.$el).select("g.y-axis")
+      .attr("transform", "translate(" + (this.width - 2 * this.axisPadding) + ",0)")
+      .call(d3.axisRight(this.yScale));
 
-    const width = k * size;
-    const height = k * size;
-
-    const svg = d3.select(this.$el)
-      .attr("width", width + 50)
-      .attr("height", width + 50);
-
-    this.xScale = d3.scaleLinear()
-      .domain([0, k])
-      .range([0, k * size]);
-
-    this.yScale = d3.scaleLinear()
-      .domain([0, k])
-      .range([0, k * size]);
-
-    this.color = d3.scaleLinear()
-      .domain([0, 0.5, 1.])
-      .range(['red', 'white', 'green']);
-
-      if (true) {
-
-        const padding = 0;
-
-        svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", `translate(0,${height - 2 * padding})`)
-          .call(d3.axisBottom(this.xScale));
-
-        svg.append("g")
-          .attr("class", "y axis")
-          .attr("transform", "translate(" + (width - 2 * padding) + ",0)")
-          .call(d3.axisRight(this.yScale));
+  },
+  methods: {
+    tileMouseDown: function() {
+      this.isDown = true;
+    },
+    tileMouseOver: function(d) {
+      if (this.isDown) {
+        d.v = 1;
       }
-
-    this.pointG = svg.append("g");
-
-    this.pointG
-      .selectAll(".point")
-      .data(this.points)
-      .enter().append("circle")
-        .attr("class", "point")
-        .attr("cx", d => this.xScale(d.x))
-        .attr("cy", d => this.yScale(d.y))
-        .attr("r", 2)
-        .style("fill", d => this.color(d.v));
-
-    const tileG = svg.append("g");
-
-    const recolor = () => {
-      tileG
-        .selectAll(".tile")
-        .data(this.tiles)
-        .style("fill", d => this.color(d.v));
-    }
-
-    let isDown = false;
-
-    tileG
-      .selectAll(".tile")
-      .data(this.tiles)
-      .enter().append("rect")
-        .attr("class", "tile")
-        .attr("x", d => this.xScale(d.x))
-        .attr("y", d => this.yScale(d.y))
-        .attr("width", size)
-        .attr("height", size)
-        .style("fill", d => this.color(d.v))
-        .style("opacity", 0.3)
-        .on("mousedown", () => isDown = true)
-        .on("mouseover", (d) => {
-         if (isDown) {
-           d.v = 1;
-           recolor();
-         }
-        })
-       .on("mouseup", () => isDown = false)
+    },
+    tileMouseUp: function() {
+      this.isDown = false;
+    },
   },
 
 }

@@ -18,8 +18,11 @@
     <Chart
       :points="dataset.points"
       :tiles="tiles"
+      :width="500"
+      :height="500"
     />
-    <p>Points: {{ points.length }}</p>
+
+    <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
   </div>
 </template>
