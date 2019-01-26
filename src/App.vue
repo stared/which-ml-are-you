@@ -3,7 +3,11 @@
     <h1>Draw classification</h1>
 
     <select v-model="dataset">
-      <option v-for="option in options" v-bind:value="option">
+      <option
+        v-for="option in options"
+        :key="option.name"
+        :value="option"
+      >
         {{ option.name }}
       </option>
     </select>
@@ -12,11 +16,11 @@
     <h2>Draw here:</h2>
 
     <Chart
-      v-bind:points="dataset.points"
-      v-bind:tiles="tiles"
+      :points="dataset.points"
+      :tiles="tiles"
     />
-    <p>Points: {{points.length}}</p>
-    <p>Tiles up: {{tilesUp}}</p>
+    <p>Points: {{ points.length }}</p>
+    <p>Tiles up: {{ tilesUp }}</p>
   </div>
 </template>
 
@@ -67,7 +71,7 @@ const circle = range(n)
   })
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     Chart
   },
