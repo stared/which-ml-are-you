@@ -35,16 +35,16 @@ const tiles = range(k * k)
   });
 
 const points = range(n)
-.map((i) => {
-  const x = Math.random();
-  const y = Math.random();
+  .map(() => {
+    const x = Math.random();
+    const y = Math.random();
 
-  return {
-    x: k * x,
-    y: k * y,
-    v: +(y < Math.sin(4 * x))
-  };
-});
+    return {
+      x: k * x,
+      y: k * y,
+      v: +(y < Math.sin(4 * x))
+    };
+  });
 
 function isPointInsideTile(point, tile) {
   return tile.x <= point.x && point.x < tile.x + tileSize
