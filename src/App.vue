@@ -63,13 +63,13 @@
             <div style="display: inline-block; -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); transform: rotate(-90deg);;">Predicted<br /> class</div>
           </th>
           <th>Positive</th>
-          <td>True Positives: {{ truePositives }}</td>
-          <td>False Positives: {{ falsePositives }}</td>
+          <td>True Positives: {{ metrics.truePositives }}</td>
+          <td>False Positives: {{ metrics.falsePositives }}</td>
         </tr>
         <tr>
           <th>Negative</th>
-          <td>False Negatives: {{ falseNegatives }}</td>
-          <td>True Negatives: {{ trueNegatives }}</td>
+          <td>False Negatives: {{ metrics.falseNegatives }}</td>
+          <td>True Negatives: {{ metrics.trueNegatives }}</td>
         </tr>
       </tbody>
     </table>
@@ -79,49 +79,8 @@
 <script>
 
 import Chart from './components/Chart.vue'
-import {computeTruePositives, computeFalsePositives, computeTrueNegatives, computeFalseNegatives} from "./metrics";
-
-const k = 10;
-const n = 50;
-
-function range(size, startAt = 0) {
-    return [...Array(size).keys()].map(i => i + startAt);
-}
-
-const tileSize = 1;
-
-const tiles = range(k * k)
-  .map((i) => {
-    return {
-      x: i % k,
-      y: Math.floor(i / k),
-      v: 0 // Math.random()
-    };
-  });
-
-const points = range(n)
-  .map(() => {
-    const x = Math.random();
-    const y = Math.random();
-
-    return {
-      x: k * x,
-      y: k * y,
-      v: +(y < Math.sin(4 * x))
-    };
-  });
-
-const circle = range(n)
-  .map(() => {
-    const x = Math.random();
-    const y = Math.random();
-
-    return {
-      x: k * x,
-      y: k * y,
-      v: +(Math.pow(x - 0.5, 2) + Math.pow(y - 0.5, 2) < 0.1)
-    };
-  });
+import {computeMetrics} from "./metrics";
+import {tiles, tileSize, generatedDatasets, fixedDatasets} from './datasets.js'
 
 export default {
   name: 'App',
@@ -130,14 +89,10 @@ export default {
   },
   data: function () {
     return {
-      dataset: {name: "Sinish", points: points},
-      points: points,
+      dataset: {name: "Empty", points: []},
+      points: [],
       tiles: tiles,
-      options: [
-        {name: "Sinish", points: points},
-        {name: "Circle", points: circle},
-        {name: "Empty", points: []},
-      ],
+      options: generatedDatasets,
       colorSchemes: [
         {name: "RedGreen", negative: 'red', positive: 'green'},
         {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
@@ -154,17 +109,8 @@ export default {
       );
       return counter;
     },
-    truePositives: function() {
-        return computeTruePositives(this.dataset.points, this.tiles, tileSize);
-    },
-    falsePositives: function() {
-        return computeFalsePositives(this.dataset.points, this.tiles, tileSize);
-    },
-    trueNegatives: function() {
-        return computeTrueNegatives(this.dataset.points, this.tiles, tileSize);
-    },
-    falseNegatives: function() {
-        return computeFalseNegatives(this.dataset.points, this.tiles, tileSize);
+    metrics: function() {
+      return computeMetrics(this.dataset.points, this.tiles, tileSize)
     }
   },
   methods: {
