@@ -18,7 +18,34 @@
     <Chart
       :points="dataset.points"
       :tiles="tiles"
+      :width="500"
+      :height="500"
+      :colorNegative="selectedColorScheme.negative"
+      :colorPositive="selectedColorScheme.positive"
     />
+
+    <div>
+      <button @click="resetSelection(0)">
+        set all to: NO
+      </button>
+      <button @click="resetSelection(1)">
+        set all to: YES
+      </button>
+      <button @click="resetSelectionRandom()">
+        set all to: raNDoM
+      </button>
+    </div>
+
+    <select v-model="selectedColorScheme">
+      <option
+        v-for="colorScheme in colorSchemes"
+        :key="colorScheme.name"
+        :value="colorScheme"
+      >
+        {{ colorScheme.name }}
+      </option>
+    </select>
+
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
     <table>
@@ -66,6 +93,12 @@ export default {
       points: [],
       tiles: tiles,
       options: generatedDatasets,
+      colorSchemes: [
+        {name: "RedGreen", negative: 'red', positive: 'green'},
+        {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
+        {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
+      ],
+      selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'}
     };
   },
   computed: {
@@ -79,6 +112,14 @@ export default {
     metrics: function() {
       return computeMetrics(this.dataset.points, this.tiles, tileSize)
     }
+  },
+  methods: {
+    resetSelection: function(targetValue) {
+      this.tiles.forEach((d) => d.v = targetValue);
+    },
+    resetSelectionRandom: function() {
+      this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
   }
 }
 </script>
