@@ -11,7 +11,6 @@
         {{ option.name }}
       </option>
     </select>
-    <span>Selected: {{ dataset.name }}</span>
 
     <h2>Draw here:</h2>
 
@@ -80,7 +79,8 @@
 
 import Chart from './components/Chart.vue'
 import {computeMetrics} from "./metrics";
-import {tiles, tileSize, generatedDatasets, fixedDatasets} from './datasets.js'
+import {tiles, tileSize, allDatasets} from './datasets.js'
+
 
 export default {
   name: 'App',
@@ -89,10 +89,10 @@ export default {
   },
   data: function () {
     return {
-      dataset: {name: "Empty", points: []},
+      dataset: allDatasets[0],
       points: [],
       tiles: tiles,
-      options: generatedDatasets,
+      options: allDatasets,
       colorSchemes: [
         {name: "RedGreen", negative: 'red', positive: 'green'},
         {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
