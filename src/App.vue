@@ -47,37 +47,15 @@
 
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
-    <table>
-      <tbody>
-        <tr>
-          <th style="background:white; border:none;" colspan="2" rowspan="2"></th>
-          <th colspan="3" style="background:none;">Actual class</th>
-        </tr>
-        <tr>
-          <th>Positive</th>
-          <th>Negative</th>
-        </tr>
-        <tr>
-          <th rowspan="3" style="height:6em;">
-            <div style="display: inline-block; -ms-transform: rotate(-90deg); -webkit-transform: rotate(-90deg); transform: rotate(-90deg);;">Predicted<br /> class</div>
-          </th>
-          <th>Positive</th>
-          <td>True Positives: {{ metrics.truePositives }}</td>
-          <td>False Positives: {{ metrics.falsePositives }}</td>
-        </tr>
-        <tr>
-          <th>Negative</th>
-          <td>False Negatives: {{ metrics.falseNegatives }}</td>
-          <td>True Negatives: {{ metrics.trueNegatives }}</td>
-        </tr>
-      </tbody>
-    </table>
+
+    <ConfusionTable :metrics="metrics"/>
   </div>
 </template>
 
 <script>
 
 import Chart from './components/Chart.vue'
+import ConfusionTable from './components/ConfusionTable.vue'
 import {computeMetrics} from "./metrics";
 import {tiles, tileSize, allDatasets} from './datasets.js'
 
@@ -85,7 +63,7 @@ import {tiles, tileSize, allDatasets} from './datasets.js'
 export default {
   name: 'App',
   components: {
-    Chart
+    Chart, ConfusionTable
   },
   data: function () {
     return {
