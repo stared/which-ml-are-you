@@ -48,6 +48,27 @@
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
 
+    <svg width="600" height="100">
+      <ConfusedTile
+      :n="3"
+      :circleRadius="3"
+      :size="50"
+      :x="30"
+      :y="10"
+      :colorTile="selectedColorScheme.negative"
+      :colorPoint="selectedColorScheme.positive"
+      />
+      <ConfusedTile
+      :n="5"
+      :circleRadius="3"
+      :size="50"
+      :x="90"
+      :y="10"
+      :colorTile="selectedColorScheme.positive"
+      :colorPoint="selectedColorScheme.positive"
+      />
+    </svg>
+
     <ConfusionTable :metrics="metrics"/>
   </div>
 </template>
@@ -56,6 +77,7 @@
 
 import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
+import ConfusedTile from './components/ConfusedTile.vue'
 import {computeMetrics} from "./metrics";
 import {tiles, tileSize, allDatasets} from './datasets.js'
 
@@ -63,7 +85,9 @@ import {tiles, tileSize, allDatasets} from './datasets.js'
 export default {
   name: 'App',
   components: {
-    Chart, ConfusionTable
+    Chart,
+    ConfusionTable,
+    ConfusedTile
   },
   data: function () {
     return {
