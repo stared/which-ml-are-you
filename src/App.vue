@@ -48,26 +48,10 @@
     <p>Points: {{ dataset.points.length }}</p>
     <p>Tiles up: {{ tilesUp }}</p>
 
-    <svg width="600" height="100">
-      <ConfusedTile
-      :n="3"
-      :circleRadius="3"
-      :size="50"
-      :x="30"
-      :y="10"
-      :colorTile="selectedColorScheme.negative"
-      :colorPoint="selectedColorScheme.positive"
-      />
-      <ConfusedTile
-      :n="5"
-      :circleRadius="3"
-      :size="50"
-      :x="90"
-      :y="10"
-      :colorTile="selectedColorScheme.positive"
-      :colorPoint="selectedColorScheme.positive"
-      />
-    </svg>
+    <QuantityVisually
+      :metrics="metrics"
+      :colorScheme="selectedColorScheme"
+    />
 
     <ConfusionTable :metrics="metrics"/>
   </div>
@@ -78,6 +62,7 @@
 import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
 import ConfusedTile from './components/ConfusedTile.vue'
+import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics} from "./metrics";
 import {tiles, tileSize, allDatasets} from './datasets.js'
 
@@ -87,7 +72,8 @@ export default {
   components: {
     Chart,
     ConfusionTable,
-    ConfusedTile
+    ConfusedTile,
+    QuantityVisually
   },
   data: function () {
     return {
