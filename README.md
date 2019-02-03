@@ -16,6 +16,9 @@ Inspirations:
   - [You Draw It: How Family Income Predicts Children’s College Chances](https://www.nytimes.com/interactive/2015/05/28/upshot/you-draw-it-how-family-income-affects-childrens-college-chances.html)
   - [You Draw It: Just How Bad Is the Drug Overdose Epidemic?](https://www.nytimes.com/interactive/2017/04/14/upshot/drug-overdose-epidemic-you-draw-it.html)
 * [TensorFlow playground](https://playground.tensorflow.org/)
+* [Precision and recall - Wikipedia](https://en.wikipedia.org/wiki/Precision_and_recall)
+  * [This beautiful diagram](https://en.wikipedia.org/wiki/F1_score#/media/File:Precisionrecall.svg) less -
+[that diagram](https://en.wikipedia.org/wiki/Binary_classification#/media/File:Binary-classification-labeled.svg)
 
 ## How to run it
 

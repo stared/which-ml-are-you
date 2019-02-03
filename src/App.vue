@@ -82,11 +82,12 @@ export default {
       tiles: tiles,
       options: allDatasets,
       colorSchemes: [
+        {name: "RedGreenWiki", negative: "#F3796F", positive: "#9DDB73"},
         {name: "RedGreen", negative: 'red', positive: 'green'},
         {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
         {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
       ],
-      selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'}
+      selectedColorScheme: {name: "RedGreenWiki", negative: '#F3796F', positive: '#9DDB73'}
     };
   },
   computed: {
