@@ -49,6 +49,9 @@
     <p>Tiles up: {{ tilesUp }}</p>
 
     <QuantityVisually
+      v-for="(formula, i) in confusionMatrixMetrics"
+      :key="i"
+      :formula="formula"
       :metrics="metrics"
       :colorScheme="selectedColorScheme"
     />
@@ -61,9 +64,8 @@
 
 import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
-import ConfusedTile from './components/ConfusedTile.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
-import {computeMetrics} from "./metrics";
+import {computeMetrics, confusionMatrixMetrics} from "./metrics";
 import {tiles, tileSize, allDatasets} from './datasets.js'
 
 
@@ -72,7 +74,6 @@ export default {
   components: {
     Chart,
     ConfusionTable,
-    ConfusedTile,
     QuantityVisually
   },
   data: function () {
@@ -87,7 +88,8 @@ export default {
         {name: "TensorFlow", negative:  'rgb(245, 147, 34)', positive: 'rgb(8, 119, 189)'},
         {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
       ],
-      selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'}
+      selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'},
+      confusionMatrixMetrics: confusionMatrixMetrics
     };
   },
   computed: {

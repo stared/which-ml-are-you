@@ -13,10 +13,11 @@
 ## Recently accomplished
 
 * Data loading
+* graphical false positive and negative
 
 ## Also consider
 
-* graphical false positive and negative
+* Maybe "Confusion Matrix Metrics" is worth a post on its own
 * dropdown with https://mikerodham.github.io/vue-dropdowns/
 * algorithms inside JS
 * also a variant with

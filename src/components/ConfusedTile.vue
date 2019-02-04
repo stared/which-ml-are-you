@@ -6,7 +6,7 @@
       :height="size"
       :x="x"
       :y="y"
-      :style="{fill: colorTile, opacity: 0.15}"
+      :style="{fill: colorScheme[colorTile], opacity: 0.15}"
     />
     <circle
       v-for="(d, i) in points"
@@ -15,7 +15,7 @@
       :cx="x + size * marginRelative + size * (1 - 2 * marginRelative) * d.dx"
       :cy="y + size * marginRelative + size * (1 - 2 * marginRelative) * d.dy"
       :r="circleRadius"
-      :style="{fill: colorPoint}"
+      :style="{fill: colorScheme[colorPoint]}"
     />
   </g>
 </template>
@@ -49,16 +49,29 @@ export default {
       type: Number,
       default: 4,
     },
-    colorTile: {
+    tileMetrics: {
       type: String,
-      default: "red"
+      default: "truePositives"
     },
-    colorPoint: {
-      type: String,
-      default: "blue"
-    }
+    colorScheme: String
   },
   computed: {
+    colorTile: function() {
+      return {
+        truePositives: "positive",
+        falsePositives: "positive",
+        falseNegatives: "negative",
+        trueNegatives: "negative",
+      }[this.tileMetrics];
+    },
+    colorPoint: function() {
+      return {
+        truePositives: "positive",
+        falsePositives: "negative",
+        falseNegatives: "positive",
+        trueNegatives: "negative",
+      }[this.tileMetrics];
+    },
     points: function() {
       return [...Array(this.n).keys()]  // range(n)
         .map(() => ({

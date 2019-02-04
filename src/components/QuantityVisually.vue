@@ -1,49 +1,48 @@
 <template>
-  <svg width="300" height="200">
+  <svg width="450" height="150">
     <text
       class="metrics-name"
-      :x="80"
-      :y="tileSize + 20">
-      Precision =
+      :x="shiftX"
+      :y="tileSize + 2 * spacing">
+      {{ formula.name }} =
     </text>
-    <ConfusedTile
-      :n="metrics.truePositives"
-      :circleRadius="3"
-      :size="tileSize"
-      :x="90 + tileSize/2"
-      :y="10"
-      :colorTile="colorScheme.positive"
-      :colorPoint="colorScheme.positive"
-    />
+    <g class="numerator">
+      <ConfusedTile
+        v-for="(quantity, i) in formula.numerator"
+        :key="i"
+        :n="metrics[quantity]"
+        :circleRadius="3"
+        :size="tileSize"
+        :x="shiftX + spacing + (i + (maxLength - formula.numerator.length)/2) * tileSize"
+        :y="spacing"
+        :tileMetrics="quantity"
+        :colorScheme="colorScheme"
+      />
+    </g>
     <line
       class="division-line"
-      :x1="90"
-      :y1="tileSize + 20"
-      :x2="90 + 2 * tileSize"
-      :y2="tileSize + 20"
+      :x1="shiftX + spacing"
+      :y1="tileSize + 2 * spacing"
+      :x2="shiftX + spacing + maxLength * tileSize"
+      :y2="tileSize + 2 * spacing"
     />
-    <ConfusedTile
-      :n="metrics.truePositives"
-      :circleRadius="3"
-      :size="tileSize"
-      :x="90"
-      :y="tileSize + 30"
-      :colorTile="colorScheme.positive"
-      :colorPoint="colorScheme.positive"
-    />
-    <ConfusedTile
-      :n="metrics.falsePositives"
-      :circleRadius="3"
-      :size="tileSize"
-      :x="90 + tileSize"
-      :y="tileSize + 30"
-      :colorTile="colorScheme.positive"
-      :colorPoint="colorScheme.negative"
-    />
+    <g class="denominator">
+      <ConfusedTile
+        v-for="(quantity, i) in formula.denominator"
+        :key="i"
+        :n="metrics[quantity]"
+        :circleRadius="3"
+        :size="tileSize"
+        :x="shiftX + spacing + (i + (maxLength - formula.denominator.length)/2) * tileSize"
+        :y="tileSize + 3 * spacing"
+        :tileMetrics="quantity"
+        :colorScheme="colorScheme"
+      />
+    </g>
     <text
       class="value-label"
-      :x="100 + 2 * tileSize"
-      :y="tileSize + 20">
+      :x="shiftX + 2 * spacing + maxLength * tileSize"
+      :y="tileSize + 2 * spacing">
       = {{ valuePercent }}%
     </text>
   </svg>
@@ -59,9 +58,25 @@ export default {
     ConfusedTile
   },
   props: {
+    formula: {
+      type: Object,
+      default: () => ({
+        name: "Precision",
+        numerator: ["truePositives"],
+        denominator: ["truePositives", "falsePositives"],
+      })
+    },
     tileSize: {
       type: Number,
       default: 50
+    },
+    spacing: {
+      type: Number,
+      default: 10
+    },
+    shiftX: {
+      type: Number,
+      default: 80
     },
     colorScheme: Object,
     metrics: {
@@ -75,11 +90,25 @@ export default {
     }
   },
   computed: {
+    maxLength: function() {
+      return Math.max(
+        this.formula.numerator.length,
+        this.formula.denominator.length
+      );
+    },
     valuePercent: function() {
       const m = this.metrics;
-      const v = m.truePositives / (m.truePositives + m.falsePositives);
-      return (100 * v).toFixed(1);
-    }
+
+      const x = this.formula.numerator
+        .map((quantity) => m[quantity])
+        .reduce((a, b) => a + b, 0);
+
+      const y = this.formula.denominator
+        .map((quantity) => m[quantity])
+        .reduce((a, b) => a + b, 0);
+
+      return (100 * x / y).toFixed(1);
+    },
   },
 
 }

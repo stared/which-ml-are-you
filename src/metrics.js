@@ -19,3 +19,21 @@ export function computeMetrics(points, tiles, tileSize) {
     trueNegatives: confusionMatrix[0][0],
   }
 }
+
+export const confusionMatrixMetrics = [
+  {
+    name: "Precision",
+    numerator: ["truePositives"],
+    denominator: ["truePositives", "falsePositives"]
+  },
+  {
+    name: "Recall",
+    numerator: ["truePositives"],
+    denominator: ["truePositives", "falseNegatives"]
+  },
+  {
+    name: "Accuracy",
+    numerator: ["truePositives", "trueNegatives"],
+    denominator: ["truePositives", "falsePositives", "falseNegatives", "trueNegatives"]
+  },
+];
