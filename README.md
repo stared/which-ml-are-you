@@ -2,6 +2,8 @@
 
 A project by [Piotr Migdał](https://p.migdal.pl/) and Katarzyna Kańska. Work in progress. We learn Vue, so any feedback and code is appreciated.
 
+![Precision, recall and accuracy - visually](precision_recall_accuracy.png)
+
 Inspirations:
 
 * [Teaching Machine Learning](https://speakerdeck.com/pmigdal/teaching-machine-learning) and my general approach to teaching via exploration, see also:
