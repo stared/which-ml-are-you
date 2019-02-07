@@ -1,13 +1,13 @@
-function isPointInsideTile(point, tile, tileSize) {
-  return tile.x <= point.x && point.x < tile.x + tileSize
-    && tile.y <= point.y && point.y < tile.y + tileSize;
+function isPointInsideTile(point, tile) {
+  return tile.x <= point.x && point.x < tile.x + tile.dx
+    && tile.y <= point.y && point.y < tile.y + tile.dy;
 }
 
-export function computeMetrics(points, tiles, tileSize) {
+export function computeMetrics(points, tiles) {
   const confusionMatrix = [[0, 0], [0, 0]];
   points.forEach((point) => {
     tiles.forEach((tile) => {
-      if (isPointInsideTile(point, tile, tileSize)) {
+      if (isPointInsideTile(point, tile)) {
         confusionMatrix[tile.v][point.v] += 1;
       }
     });

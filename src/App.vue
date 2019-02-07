@@ -101,7 +101,7 @@ export default {
       return counter;
     },
     metrics: function() {
-      return computeMetrics(this.dataset.points, this.tiles, tileSize)
+      return computeMetrics(this.dataset.points, this.tiles)
     }
   },
   methods: {

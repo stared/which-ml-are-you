@@ -63,12 +63,12 @@ export default {
   computed: {
     xScale: function() {
       return d3.scaleLinear()
-        .domain([0, this.k])
+        .domain([-1, 1])
         .range([0, this.k * this.size]);
     },
     yScale: function() {
       return d3.scaleLinear()
-        .domain([0, this.k])
+        .domain([-1, 1])
         .range([0, this.k * this.size]);
     },
     color: function() {
