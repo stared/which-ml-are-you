@@ -76,7 +76,7 @@ export default {
     },
     shiftX: {
       type: Number,
-      default: 80
+      default: 100
     },
     colorScheme: Object,
     metrics: {
