@@ -6,14 +6,14 @@
       :height="size"
       :x="x"
       :y="y"
-      :style="{fill: colorScheme[colorTile], opacity: 0.15}"
+      :style="{fill: colorScheme[colorTile]}"
     />
     <circle
       v-for="(d, i) in points"
       :key="i"
       class="point"
-      :cx="x + size * marginRelative + size * (1 - 2 * marginRelative) * d.dx"
-      :cy="y + size * marginRelative + size * (1 - 2 * marginRelative) * d.dy"
+      :cx="x + scale(d.x)"
+      :cy="y + scale(d.y)"
       :r="circleRadius"
       :style="{fill: colorScheme[colorPoint]}"
     />
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+
+import {scaleLinear} from "d3-scale";
 
 export default {
   name: 'ConfusionTable',
@@ -41,9 +43,9 @@ export default {
       type: Number,
       default: 20
     },
-    marginRelative: {
+    contraction: {
       type: Number,
-      default: 0.1,
+      default: 0.9,
     },
     circleRadius: {
       type: Number,
@@ -53,7 +55,21 @@ export default {
       type: String,
       default: "truePositives"
     },
-    colorScheme: Object
+    colorScheme: {
+      type: Object,
+      default: () => ({
+        name: "RedGreen",
+        negative: 'red',
+        positive: 'green'
+      })
+    }
+  },
+  data: function() {
+    return {
+      scale: scaleLinear()
+        .domain([-1/this.contraction, 1/this.contraction])
+        .range([0, this.size])
+    };
   },
   computed: {
     colorTile: function() {
@@ -75,8 +91,8 @@ export default {
     points: function() {
       return [...Array(this.n).keys()]  // range(n)
         .map(() => ({
-          dx: Math.random(),
-          dy: Math.random(),
+          x: 2 * Math.random() - 1,
+          y: 2 * Math.random() - 1,
         }))
     }
   },
@@ -89,6 +105,7 @@ export default {
 
 .tile {
   cursor: pointer;
+  opacity: 0.15;
 }
 
 .point {
