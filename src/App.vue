@@ -49,10 +49,11 @@
     <p>Tiles up: {{ tilesUp }}</p>
 
     <QuantityVisually
-      v-for="(formula, i) in confusionMatrixMetrics"
+      v-for="formula in confusionMatrixMetrics"
       :key="`qv-${formula.name}`"
       :formula="formula"
       :metrics="metrics"
+      :metricsPoints="metricsPoints"
       :colorScheme="selectedColorScheme"
     />
 
@@ -65,7 +66,7 @@
 import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
-import {computeMetrics, confusionMatrixMetrics} from './metrics.js';
+import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
 import {tiles, allDatasets} from './datasets.js'
 
 
@@ -102,7 +103,10 @@ export default {
     },
     metrics: function() {
       return computeMetrics(this.dataset.points, this.tiles)
-    }
+    },
+    metricsPoints: function() {
+      return splitByMetrics(this.dataset.points, this.tiles)
+    },
   },
   methods: {
     resetSelection: function(targetValue) {

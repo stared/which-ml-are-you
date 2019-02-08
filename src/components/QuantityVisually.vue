@@ -11,6 +11,7 @@
         v-for="(quantity, i) in formula.numerator"
         :key="`numerator-${i}-${quantity}`"
         :n="metrics[quantity]"
+        :points="metricsPoints[quantity]"
         :circleRadius="3"
         :size="tileSize"
         :x="shiftX + spacing + (i + (maxLength - formula.numerator.length)/2) * tileSize"
@@ -31,6 +32,7 @@
         v-for="(quantity, i) in formula.denominator"
         :key="`denominator-${i}-${quantity}`"
         :n="metrics[quantity]"
+        :points="metricsPoints[quantity]"
         :circleRadius="3"
         :size="tileSize"
         :x="shiftX + spacing + (i + (maxLength - formula.denominator.length)/2) * tileSize"
@@ -76,9 +78,16 @@ export default {
     },
     shiftX: {
       type: Number,
-      default: 100
+      default: 150
     },
-    colorScheme: Object,
+    colorScheme: {
+      type: Object,
+      default: () => ({
+        name: "RedGreen",
+        negative: 'red',
+        positive: 'green'
+      })
+    },
     metrics: {
       type: Object,
       default: () => ({
@@ -87,7 +96,16 @@ export default {
         falseNegatives: 0,
         trueNegatives: 0,
       })
-    }
+    },
+    metricsPoints: {
+      type: Object,
+      default: () => ({
+        truePositives: [],
+        falsePositives: [],
+        falseNegatives: [],
+        trueNegatives: [],
+      })
+    },
   },
   computed: {
     maxLength: function() {
@@ -98,6 +116,7 @@ export default {
     },
     valuePercent: function() {
       const m = this.metrics;
+      // use metricsPoints -> length in metrics not present?
 
       const x = this.formula.numerator
         .map((quantity) => m[quantity])

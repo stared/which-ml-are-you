@@ -20,6 +20,23 @@ export function computeMetrics(points, tiles) {
   }
 }
 
+export function splitByMetrics(points, tiles) {
+  const confusionMatrixPoints = [[[], []], [[], []]];
+  points.forEach((point) => {
+    tiles.forEach((tile) => {
+      if (isPointInsideTile(point, tile)) {
+        confusionMatrixPoints[tile.v][point.v].push(point);
+      }
+    });
+  });
+  return {
+    truePositives: confusionMatrixPoints[1][1],
+    falsePositives: confusionMatrixPoints[1][0],
+    falseNegatives: confusionMatrixPoints[0][1],
+    trueNegatives: confusionMatrixPoints[0][0],
+  }
+}
+
 export const metrics2acronym = {
   truePositive: "TP",
   falsePositives: "FP",

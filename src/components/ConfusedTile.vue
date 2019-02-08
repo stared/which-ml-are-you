@@ -9,7 +9,7 @@
       :style="{fill: colorScheme[colorTile]}"
     />
     <circle
-      v-for="(d, i) in points"
+      v-for="(d, i) in pointsToShow"
       :key="i"
       class="point"
       :cx="x + scale(d.x)"
@@ -27,6 +27,10 @@ import {scaleLinear} from "d3-scale";
 export default {
   name: 'ConfusionTable',
   props: {
+    points: {
+      type: Array,  // ([{x: 0, y: 0}, ...])
+      default: () => ([])
+    },
     n: {
       type: Number,
       default: 3
@@ -88,12 +92,17 @@ export default {
         trueNegatives: "negative",
       }[this.tileMetrics];
     },
-    points: function() {
-      return [...Array(this.n).keys()]  // range(n)
+    pointsToShow: function() {
+      if (this.points.length > 0) {
+        return this.points;
+      } else {
+        // maybe also some semi-deterministic way?
+        return [...Array(this.n).keys()]  // range(n)
         .map(() => ({
           x: 2 * Math.random() - 1,
           y: 2 * Math.random() - 1,
         }))
+      }
     }
   },
 
