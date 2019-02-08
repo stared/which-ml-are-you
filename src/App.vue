@@ -50,7 +50,7 @@
 
     <QuantityVisually
       v-for="(formula, i) in confusionMatrixMetrics"
-      :key="i"
+      :key="`qv-${formula.name}`"
       :formula="formula"
       :metrics="metrics"
       :colorScheme="selectedColorScheme"

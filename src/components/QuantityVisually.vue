@@ -9,7 +9,7 @@
     <g class="numerator">
       <ConfusedTile
         v-for="(quantity, i) in formula.numerator"
-        :key="i"
+        :key="`numerator-${i}-${quantity}`"
         :n="metrics[quantity]"
         :circleRadius="3"
         :size="tileSize"
@@ -29,7 +29,7 @@
     <g class="denominator">
       <ConfusedTile
         v-for="(quantity, i) in formula.denominator"
-        :key="i"
+        :key="`denominator-${i}-${quantity}`"
         :n="metrics[quantity]"
         :circleRadius="3"
         :size="tileSize"
