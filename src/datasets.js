@@ -2,7 +2,6 @@ import {scaleLinear} from "d3-scale";
 import {datasets} from '../assets/datasets/all.json'
 
 const k = 10;
-export const tileSize = 1;
 
 function range(size, startAt = 0) {
     return [...Array(size).keys()].map(i => i + startAt);

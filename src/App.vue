@@ -66,7 +66,7 @@ import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics, confusionMatrixMetrics} from './metrics.js';
-import {tiles, tileSize, allDatasets} from './datasets.js'
+import {tiles, allDatasets} from './datasets.js'
 
 
 export default {

@@ -1,8 +1,8 @@
 <template>
   <svg
     class="chart"
-    :width="width + 50"
-    :height="height + 50"
+    :width="width + 2 * margin"
+    :height="height + 2 * margin"
   >
     <g>
       <circle
@@ -22,8 +22,8 @@
         class="tile"
         :x="xScale(d.x)"
         :y="yScale(d.y)"
-        :width="size"
-        :height="size"
+        :width="sizeX"
+        :height="sizeY"
         :style="{fill: color(d.v), opacity: 0.15}"
         @mousedown="tileMouseDown(d)"
         @mouseover="tileMouseOver(d)"
@@ -44,13 +44,17 @@ const d3 = { select, scaleLinear, axisBottom, axisRight };
 export default {
   name: 'Chart',
   props: {
-    points: Array,
-    tiles: Array,
-    width: Number,
-    height: Number,
-    size: {type: Number, default: 50},
-    k: {type: Number, default: 10},
-    axisPadding: {type: Number, default: 0},
+    points: {type: Array, default: () => ([])},
+    tiles: {type: Array, default: () => ([{
+      x: -1,
+      y: -1,
+      dx: 2,
+      dy: 2,
+      v: 0
+    }])},
+    width: {type: Number, default: 500},
+    height: {type: Number, default: 500},
+    margin: {type: Number, default: 50},
     colorNegative: {type: String, default: "red"},
     colorPositive: {type: String, default: "green"},
   },
@@ -58,18 +62,21 @@ export default {
     return {
       isDown: false,
       brushValue: 1,
+      xScale: d3.scaleLinear()
+                .domain([-1, 1])
+                .range([this.margin, this.margin + this.width]),
+      yScale: d3.scaleLinear()
+                .domain([-1, 1])
+                .range([this.margin, this.margin + this.height])
+
     };
   },
   computed: {
-    xScale: function() {
-      return d3.scaleLinear()
-        .domain([-1, 1])
-        .range([0, this.k * this.size]);
+    sizeX: function() {
+      return this.xScale(this.tiles[0].dx) - this.xScale(0);
     },
-    yScale: function() {
-      return d3.scaleLinear()
-        .domain([-1, 1])
-        .range([0, this.k * this.size]);
+    sizeY: function() {
+      return this.yScale(this.tiles[0].dy) - this.yScale(0);
     },
     color: function() {
       return d3.scaleLinear()
@@ -79,11 +86,11 @@ export default {
   },
   mounted() {
     d3.select(this.$el).select("g.x-axis")
-      .attr("transform", `translate(0,${this.height - 2 * this.axisPadding})`)
+      .attr("transform", `translate(0,${this.margin + this.height})`)
       .call(d3.axisBottom(this.xScale));
 
     d3.select(this.$el).select("g.y-axis")
-      .attr("transform", "translate(" + (this.width - 2 * this.axisPadding) + ",0)")
+      .attr("transform", `translate(${this.margin + this.width},0)`)
       .call(d3.axisRight(this.yScale));
 
   },
@@ -108,20 +115,6 @@ export default {
 </script>
 
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 
 .tile {
   cursor: pointer;
