@@ -53,7 +53,7 @@ export default {
       type: String,
       default: "truePositives"
     },
-    colorScheme: String
+    colorScheme: Object
   },
   computed: {
     colorTile: function() {
