@@ -24,7 +24,7 @@
         :y="yScale(d.y)"
         :width="sizeX"
         :height="sizeY"
-        :style="{fill: color(d.v), opacity: 0.15}"
+        :style="{fill: color(d.v)}"
         @mousedown="tileMouseDown(d)"
         @mouseover="tileMouseOver(d)"
         @mouseup="tileMouseUp()"
@@ -118,6 +118,11 @@ export default {
 
 .tile {
   cursor: pointer;
+  opacity: 0.15;
+}
+
+.tile:hover {
+  opacity: 0.1;
 }
 
 .point {
