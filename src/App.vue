@@ -58,6 +58,11 @@
     />
 
     <ConfusionTable :metrics="metrics"/>
+    <ConfusionTableVisually
+      :metrics="metrics"
+      :metricsPoints="metricsPoints"
+      :colorScheme="selectedColorScheme"
+    />
   </div>
 </template>
 
@@ -65,6 +70,7 @@
 
 import Chart from './components/Chart.vue'
 import ConfusionTable from './components/ConfusionTable.vue'
+import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
 import {tiles, allDatasets} from './datasets.js'
@@ -75,7 +81,8 @@ export default {
   components: {
     Chart,
     ConfusionTable,
-    QuantityVisually
+    QuantityVisually,
+    ConfusionTableVisually
   },
   data: function () {
     return {
