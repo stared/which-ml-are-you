@@ -51,5 +51,14 @@ npm run test
 npm run lint
 ```
 
+#### Deploy to GitHub pages
+
+First, install [push-dir](https://www.npmjs.com/package/push-dir). Then:
+
+```npm run build; push-dir --dir=dist --branch=gh-pages --cleanup
+```
+
+See [Deploy Vue to GitHub pages-the easy way!](https://medium.com/@codetheorist/vue-up-your-github-pages-the-right-way-955486220418). You need to set relative paths in `vue.config.js`.
+
 #### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
