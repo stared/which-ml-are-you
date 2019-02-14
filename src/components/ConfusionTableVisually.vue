@@ -5,8 +5,7 @@
   >
     <text
       class="label-rows main-label"
-      :x="3 * spacing / 2"
-      :y="shiftY + 3 * spacing / 2 + tileSize"
+      :style="rotatedTextStyle"
     >
       Predicted class
     </text>
@@ -115,6 +114,15 @@ export default {
       })
     },
   },
+  computed: {
+    rotatedTextStyle: function() {
+      return {
+        transform : 'translate('
+          + this.spacing + 'px, '
+          + (this.shiftY + 3 * this.spacing / 2 + this.tileSize)
+          + 'px) rotate(-90deg)'};
+    },
+  },
 }
 
 </script>
@@ -129,9 +137,6 @@ export default {
 .label-rows {
   text-anchor: middle;
   dominant-baseline: central;
-
-  /*transform-origin: left bottom;*/
-  /*transform: rotate(-90deg) translate(15, 200);*/
 }
 
 .label-columns {
