@@ -1,5 +1,5 @@
 module.exports = {
   lintOnSave: true,
-  baseUrl: '/which-ml-are-you/',
+  runtimeCompiler: true,
+  // baseUrl: '/which-ml-are-you/',
 };
-
