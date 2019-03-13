@@ -2,15 +2,22 @@
   <div id="level">
     <h1>Level {{ id }}</h1>
 
+    <ul class="menu">
+      <li><router-link :to="'/lvl/' + Math.max(1, lvlId - 1)">Previous</router-link></li>
+      <li><router-link :to="'/lvl/' + Math.min(levelsLength, lvlId + 1)">Next</router-link></li>
+    </ul>
 
     <h2>Draw classification</h2>
 
+    <p>({{ mode }} mode)<p>
+
     <Chart
-      :points="dataset.points"
+      :points="level[this.mode].points"
       :tiles="tiles"
       :width="500"
       :height="500"
       :colorScheme="selectedColorScheme"
+      :editable="mode == 'train'"
     />
 
     <div>
@@ -25,11 +32,25 @@
       </button>
     </div>
 
+    <div>
+      <button @click="setMode('validation')">
+        Validate!
+      </button>
+    </div>
+
     <ConfusionTableVisually
       :metrics="metrics"
       :metricsPoints="metricsPoints"
       :colorScheme="selectedColorScheme"
     />
+
+    <ConfusionTableVisually
+      v-if="mode == 'validation'"
+      :metrics="metricsVal"
+      :metricsPoints="metricsPointsVal"
+      :colorScheme="selectedColorScheme"
+    />
+
   </div>
 </template>
 
@@ -37,8 +58,9 @@
 
 import Chart from './components/Chart.vue'
 import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
-import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
-import {tiles, allDatasets} from './datasets.js'
+import {computeMetrics, splitByMetrics} from './metrics.js';
+import {tiles} from './datasets.js'
+import {levels} from './levels.js'
 
 
 export default {
@@ -48,14 +70,14 @@ export default {
     ConfusionTableVisually
   },
   props: {
-    id: {type: Number, default: 1},
+    id: {type: String, required: true},
   },
   data: function () {
     return {
-      dataset: allDatasets[0],
-      points: [],
+      // level: levels[parseInt(this.id)],
+      mode: 'train',
+      levelsLength: levels.length,
       tiles: tiles,
-      options: allDatasets,
       colorSchemes: [
         {name: "RedGreen", negative: 'red', positive: 'green'},
         {name: "RedGreenWiki", negative: "#F3796F", positive: "#9DDB73"},
@@ -63,23 +85,33 @@ export default {
         {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
       ],
       selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'},
-      confusionMatrixMetrics: confusionMatrixMetrics
     };
   },
   computed: {
-    tilesUp: function() {
-      let counter = 0;
-      this.tiles.forEach(
-        (d) => counter += d.v
-      );
-      return counter;
+    level: function() {
+      return levels[parseInt(this.id) - 1];
+    },
+    lvlId: function() {
+      return parseInt(this.id);
     },
     metrics: function() {
-      return computeMetrics(this.dataset.points, this.tiles)
+      return computeMetrics(this.level['train'].points, this.tiles)
     },
     metricsPoints: function() {
-      return splitByMetrics(this.dataset.points, this.tiles)
+      return splitByMetrics(this.level['train'].points, this.tiles)
     },
+    metricsVal: function() {
+      return computeMetrics(this.level['validation'].points, this.tiles)
+    },
+    metricsPointsVal: function() {
+      return splitByMetrics(this.level['validation'].points, this.tiles)
+    },
+  },
+  watch: {
+    id: function() {
+      this.mode = 'train';
+      this.resetSelection(0);
+    }
   },
   methods: {
     resetSelection: function(targetValue) {
@@ -87,6 +119,9 @@ export default {
     },
     resetSelectionRandom: function() {
       this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
+    setMode: function(mode) {
+      this.mode = mode;
     },
   }
 }

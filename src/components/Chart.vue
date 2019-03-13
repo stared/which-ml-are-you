@@ -62,7 +62,8 @@ export default {
         negative: 'red',
         positive: 'green'
       })
-    }
+    },
+    editable: {type: Boolean, default: true},
   },
   data: function () {
     return {
@@ -102,6 +103,9 @@ export default {
   },
   methods: {
     tileMouseDown: function(d) {
+      if (!this.editable) {
+        return;
+      }
       this.isDown = true;
       this.brushValue = 1 - d.v;
       d.v = this.brushValue;
