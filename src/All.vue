@@ -19,8 +19,7 @@
       :tiles="tiles"
       :width="500"
       :height="500"
-      :colorNegative="selectedColorScheme.negative"
-      :colorPositive="selectedColorScheme.positive"
+      :colorScheme="selectedColorScheme"
     />
 
     <div>

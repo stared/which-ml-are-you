@@ -55,8 +55,14 @@ export default {
     width: {type: Number, default: 500},
     height: {type: Number, default: 500},
     margin: {type: Number, default: 50},
-    colorNegative: {type: String, default: "red"},
-    colorPositive: {type: String, default: "green"},
+    colorScheme: {
+      type: Object,
+      default: () => ({
+        name: "RedGreen",
+        negative: 'red',
+        positive: 'green'
+      })
+    }
   },
   data: function () {
     return {
@@ -81,7 +87,7 @@ export default {
     color: function() {
       return d3.scaleLinear()
         .domain([0, 0.5, 1.])
-        .range([this.colorNegative, 'white', this.colorPositive]);
+        .range([this.colorScheme.negative, 'white', this.colorScheme.positive]);
     },
   },
   mounted() {
