@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import All from './All.vue'
+import Level from './Level.vue'
 import VueRouter from 'vue-router'
 
 Vue.config.productionTip = false
@@ -10,7 +11,7 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   routes: [
     { path: '/', component: All },
-    { path: '/lvl/:id', component: All},  // here will be levels
+    { path: '/lvl/:id', component: Level, props: true },
     {
       path: '*',
       component: {
