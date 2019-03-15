@@ -32,6 +32,13 @@
       <button @click="resetSelectionRandom()">
         set all to: raNDoM
       </button>
+      <button
+        v-for="(classifier, i) in [`Nearest Neighbors`, `Linear SVM`, `RBF SVM`, `Gaussian Process`, `Decision Tree`, `Random Forest`, `Neural Net`, `AdaBoost`, `Naive Bayes`, `QDA`]"
+        :key="`${i}-${classifier}`"
+        @click="resetSelectionByClassifier(classifier)"
+      >
+        set all to: {{ classifier }}
+      </button>
     </div>
 
     <select v-model="selectedColorScheme">
@@ -73,6 +80,7 @@ import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
 import {tiles, allDatasets} from './datasets.js'
+import {getPredictions} from './predictions.js'
 
 
 export default {
@@ -120,6 +128,9 @@ export default {
     },
     resetSelectionRandom: function() {
       this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
+    resetSelectionByClassifier: function(classifierName) {
+      getPredictions(this.tiles, this.dataset.name, classifierName);
     },
   }
 }
