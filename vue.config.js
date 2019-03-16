@@ -1,5 +1,7 @@
 module.exports = {
   lintOnSave: true,
   runtimeCompiler: true,
-  // baseUrl: '/which-ml-are-you/',
+  baseUrl: process.env.NODE_ENV === 'production'
+    ? '/which-ml-are-you/'
+    : '/'
 };

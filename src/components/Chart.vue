@@ -7,7 +7,7 @@
     <g>
       <circle
         v-for="(d, i) in points"
-        :key="i"
+        :key=`point-${i}`
         class="point"
         :cx="xScale(d.x)"
         :cy="yScale(d.y)"
