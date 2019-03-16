@@ -2,17 +2,18 @@
   <div id="all">
     <h1>Draw classification</h1>
 
-    <select v-model="dataset">
-      <option
-        v-for="option in options"
-        :key="option.name"
-        :value="option"
-      >
-        {{ option.name }}
-      </option>
-    </select>
-
-    <h2>Draw here:</h2>
+    <div>
+      <span>Choose dataset:</span>
+      <select v-model="dataset">
+        <option
+          v-for="option in options"
+          :key="option.name"
+          :value="option"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+    </div>
 
     <Chart
       :points="dataset.points"
@@ -23,29 +24,40 @@
     />
 
     <div>
+      <span>Reset all to: </span>
       <button @click="resetSelection(0)">
-        set all to: NO
+        NO
       </button>
       <button @click="resetSelection(1)">
-        set all to: YES
+        YES
       </button>
       <button @click="resetSelectionRandom()">
-        set all to: raNDoM
+        raNDoM
+      </button>
+    </div>
+    <div v-if="datasetHasPredictions">
+      <span>Classifier predicitions: </span>
+      <button
+        v-for="(classifier, i) in [`Nearest Neighbors`, `Linear SVM`, `RBF SVM`, `Gaussian Process`, `Decision Tree`, `Random Forest`, `Neural Net`, `AdaBoost`, `Naive Bayes`, `QDA`]"
+        :key="`${i}-${classifier}`"
+        @click="resetSelectionByClassifier(classifier)"
+      >
+        {{ classifier }}
       </button>
     </div>
 
-    <select v-model="selectedColorScheme">
-      <option
-        v-for="colorScheme in colorSchemes"
-        :key="colorScheme.name"
-        :value="colorScheme"
-      >
-        {{ colorScheme.name }}
-      </option>
-    </select>
-
-    <p>Points: {{ dataset.points.length }}</p>
-    <p>Tiles up: {{ tilesUp }}</p>
+    <div>
+      <span>Choose color theme:</span>
+      <select v-model="selectedColorScheme">
+        <option
+          v-for="colorScheme in colorSchemes"
+          :key="colorScheme.name"
+          :value="colorScheme"
+        >
+          {{ colorScheme.name }}
+        </option>
+      </select>
+    </div>
 
     <QuantityVisually
       v-for="formula in confusionMatrixMetrics"
@@ -73,7 +85,7 @@ import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
 import {tiles, allDatasets} from './datasets.js'
-
+import {datasetHasPredictions, getPredictions} from './predictions.js'
 
 export default {
   name: 'All',
@@ -113,6 +125,9 @@ export default {
     metricsPoints: function() {
       return splitByMetrics(this.dataset.points, this.tiles)
     },
+    datasetHasPredictions: function() {
+      return datasetHasPredictions(this.dataset.name);
+    },
   },
   methods: {
     resetSelection: function(targetValue) {
@@ -120,6 +135,9 @@ export default {
     },
     resetSelectionRandom: function() {
       this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
+    resetSelectionByClassifier: function(classifierName) {
+      getPredictions(this.tiles, this.dataset.name, classifierName);
     },
   }
 }
