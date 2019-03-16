@@ -33,6 +33,16 @@
     </div>
 
     <div>
+      <button
+        v-for="(classifier, i) in [`Nearest Neighbors`, `Linear SVM`, `RBF SVM`, `Gaussian Process`, `Decision Tree`, `Random Forest`, `Neural Net`, `AdaBoost`, `Naive Bayes`, `QDA`]"
+        :key="`${i}-${classifier}`"
+        @click="resetSelectionByClassifier(classifier)"
+      >
+        set all to: {{ classifier }}
+      </button>
+    </div>
+
+    <div>
       <button @click="setMode('validation')">
         Validate!
       </button>
@@ -61,6 +71,7 @@ import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
 import {computeMetrics, splitByMetrics} from './metrics.js';
 import {tiles} from './datasets.js'
 import {levels} from './levels.js'
+import {getPredictions} from './predictions.js';
 
 
 export default {
@@ -119,6 +130,9 @@ export default {
     },
     resetSelectionRandom: function() {
       this.tiles.forEach((d) => d.v = +(Math.random() > 0.5));
+    },
+    resetSelectionByClassifier: function(classifierName) {
+      getPredictions(this.tiles, this.level.train.name, classifierName);
     },
     setMode: function(mode) {
       this.mode = mode;

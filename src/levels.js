@@ -8,18 +8,18 @@ import {
 
 export const levels = [{
     // linear
-    train: fixedDatasets[1],
-    validation: fixedDatasetsTest[1]
-  },
-  {
-    // moons
     train: fixedDatasets[2],
     validation: fixedDatasetsTest[2]
   },
   {
-    // circle
+    // moons
     train: fixedDatasets[0],
     validation: fixedDatasetsTest[0]
+  },
+  {
+    // circle
+    train: fixedDatasets[1],
+    validation: fixedDatasetsTest[1]
   },
   {
     // xor
