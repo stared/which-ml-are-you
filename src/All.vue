@@ -32,12 +32,14 @@
       <button @click="resetSelectionRandom()">
         set all to: raNDoM
       </button>
+    </div>
+    <div v-if="datasetHasPredictions">
       <button
         v-for="(classifier, i) in [`Nearest Neighbors`, `Linear SVM`, `RBF SVM`, `Gaussian Process`, `Decision Tree`, `Random Forest`, `Neural Net`, `AdaBoost`, `Naive Bayes`, `QDA`]"
         :key="`${i}-${classifier}`"
         @click="resetSelectionByClassifier(classifier)"
       >
-        set all to: {{ classifier }}
+        {{ classifier }}
       </button>
     </div>
 
@@ -80,8 +82,7 @@ import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
 import QuantityVisually from './components/QuantityVisually.vue'
 import {computeMetrics, confusionMatrixMetrics, splitByMetrics} from './metrics.js';
 import {tiles, allDatasets} from './datasets.js'
-import {getPredictions} from './predictions.js'
-
+import {datasetHasPredictions, getPredictions} from './predictions.js'
 
 export default {
   name: 'All',
@@ -120,6 +121,9 @@ export default {
     },
     metricsPoints: function() {
       return splitByMetrics(this.dataset.points, this.tiles)
+    },
+    datasetHasPredictions: function() {
+      return datasetHasPredictions(this.dataset.name);
     },
   },
   methods: {

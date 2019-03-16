@@ -12,11 +12,19 @@ function findPrediction(tile, preds) {
   return 0;
 }
 
+export function datasetHasPredictions(datasetName) {
+  return predictions[datasetName] !== undefined;
+  }
+
 export function getPredictions(tiles, dataset, classifier) {
-  if (predictions[dataset] === undefined)
+  if (predictions[dataset] === undefined) {
+    console.log("No dataset");
     return;
-  if (predictions[dataset][classifier] === undefined)
+  }
+  if (predictions[dataset][classifier] === undefined) {
+    console.log("No classifier");
     return;
+  }
   const selectedPredictions = predictions[dataset][classifier];
   tiles.forEach((d) => d.v = findPrediction(d, selectedPredictions));
 }
