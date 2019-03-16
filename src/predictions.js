@@ -17,14 +17,15 @@ export function datasetHasPredictions(datasetName) {
   }
 
 export function getPredictions(tiles, dataset, classifier) {
-  if (predictions[dataset] === undefined) {
-    console.log("No dataset");
-    return;
-  }
-  if (predictions[dataset][classifier] === undefined) {
-    console.log("No classifier");
-    return;
-  }
+  //// silent error messages are dangerous
+  // if (predictions[dataset] === undefined) {
+  //   console.log("No dataset");
+  //   return;
+  // }
+  // if (predictions[dataset][classifier] === undefined) {
+  //   console.log("No classifier");
+  //   return;
+  // }
   const selectedPredictions = predictions[dataset][classifier];
   tiles.forEach((d) => d.v = findPrediction(d, selectedPredictions));
 }
