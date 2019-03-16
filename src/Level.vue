@@ -21,24 +21,25 @@
     />
 
     <div>
+      <span>Reset all to: </span>
       <button @click="resetSelection(0)">
-        set all to: NO
+        NO
       </button>
       <button @click="resetSelection(1)">
-        set all to: YES
+        YES
       </button>
       <button @click="resetSelectionRandom()">
-        set all to: raNDoM
+        raNDoM
       </button>
     </div>
-
-    <div>
+    <div v-if="datasetHasPredictions">
+      <span>Classifier predicitions: </span>
       <button
         v-for="(classifier, i) in [`Nearest Neighbors`, `Linear SVM`, `RBF SVM`, `Gaussian Process`, `Decision Tree`, `Random Forest`, `Neural Net`, `AdaBoost`, `Naive Bayes`, `QDA`]"
         :key="`${i}-${classifier}`"
         @click="resetSelectionByClassifier(classifier)"
       >
-        set all to: {{ classifier }}
+        {{ classifier }}
       </button>
     </div>
 
@@ -48,18 +49,63 @@
       </button>
     </div>
 
-    <ConfusionTableVisually
-      :metrics="metrics"
-      :metricsPoints="metricsPoints"
-      :colorScheme="selectedColorScheme"
-    />
+    <div class="row">
+      <div class="column">
+        <h3>Train results</h3>
+        <ConfusionTableVisually
+          :metrics="metrics"
+          :metricsPoints="metricsPoints"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Accuracy')[0]"
+          :metrics="metrics"
+          :metricsPoints="metricsPoints"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Precision')[0]"
+          :metrics="metrics"
+          :metricsPoints="metricsPoints"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Recall')[0]"
+          :metrics="metrics"
+          :metricsPoints="metricsPoints"
+          :colorScheme="selectedColorScheme"
+        />
+      </div>
+      <div class="column" v-if="mode == 'validation'">
+        <h3>Validation results</h3>
+        <ConfusionTableVisually
+          :metrics="metricsVal"
+          :metricsPoints="metricsPointsVal"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Accuracy')[0]"
+          :metrics="metricsVal"
+          :metricsPoints="metricsPointsVal"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Precision')[0]"
+          :metrics="metricsVal"
+          :metricsPoints="metricsPointsVal"
+          :colorScheme="selectedColorScheme"
+        />
+        <QuantityVisually
+          :formula="confusionMatrixMetrics.filter((d) => d.name == 'Recall')[0]"
+          :metrics="metricsVal"
+          :metricsPoints="metricsPointsVal"
+          :colorScheme="selectedColorScheme"
+        />
+      </div>
+    </div>
 
-    <ConfusionTableVisually
-      v-if="mode == 'validation'"
-      :metrics="metricsVal"
-      :metricsPoints="metricsPointsVal"
-      :colorScheme="selectedColorScheme"
-    />
+
+
 
   </div>
 </template>
@@ -68,17 +114,19 @@
 
 import Chart from './components/Chart.vue'
 import ConfusionTableVisually from './components/ConfusionTableVisually.vue'
-import {computeMetrics, splitByMetrics} from './metrics.js';
+import QuantityVisually from './components/QuantityVisually.vue'
+import {computeMetrics, splitByMetrics, confusionMatrixMetrics} from './metrics.js';
 import {tiles} from './datasets.js'
 import {levels} from './levels.js'
-import {getPredictions} from './predictions.js';
+import {getPredictions, datasetHasPredictions} from './predictions.js';
 
 
 export default {
   name: 'Level',
   components: {
     Chart,
-    ConfusionTableVisually
+    ConfusionTableVisually,
+    QuantityVisually
   },
   props: {
     id: {type: String, required: true},
@@ -96,6 +144,7 @@ export default {
         {name: "sklearn", negative:  'rgb(255, 0, 0)', positive: 'rgb(0, 0, 255)'},
       ],
       selectedColorScheme: {name: "RedGreen", negative: 'red', positive: 'green'},
+      confusionMatrixMetrics: confusionMatrixMetrics,
     };
   },
   computed: {
@@ -116,6 +165,9 @@ export default {
     },
     metricsPointsVal: function() {
       return splitByMetrics(this.level['validation'].points, this.tiles)
+    },
+    datasetHasPredictions: function() {
+      return datasetHasPredictions(this.level.name);
     },
   },
   watch: {
@@ -149,5 +201,17 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.column {
+  float: left;
+  width: 50%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 </style>
