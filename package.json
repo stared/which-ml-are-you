@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "d3-axis": "^1.0.12",
-    "d3-scale": "^2.1.2",
+    "d3-scale": "^4.0.2",
     "d3-selection": "^1.4.0",
     "vue": "^2.5.21",
     "vue-router": "^3.0.2"
